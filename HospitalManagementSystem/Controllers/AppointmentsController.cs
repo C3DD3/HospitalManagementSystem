@@ -49,8 +49,19 @@ namespace HospitalManagementSystem.Controllers
         // GET: Appointments/Create
         public IActionResult Create()
         {
-            ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "DoctorId");
-            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "PatientId");
+
+            ViewData["Doctors"] = _context.Doctors.Select(p => new SelectListItem
+            {
+                Value = p.DoctorId.ToString(),
+                Text = p.FirstName + " " + p.LastName,
+            }).ToList();
+
+            ViewData["Patients"] = _context.Patients.Select(p => new SelectListItem
+            {
+                Value = p.PatientId.ToString(),
+                Text = p.FirstName + " " + p.LastName,
+            }).ToList();
+
             return View();
         }
 

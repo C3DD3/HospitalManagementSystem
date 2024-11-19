@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using HospitalManagementSystem.Models;
 using HospitalManagementSystem.Repository;
 using HospitalManagementSystem.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalManagementSystem.Controllers
 {
+    [Authorize (Roles = "Manager")] 
     public class DoctorsController : Controller
     {
         private readonly ApplicationDbContext _context;

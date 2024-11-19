@@ -110,12 +110,29 @@ namespace HospitalManagementSystem.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    // Kullanıcı bilgilerini al
+                    var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+
+                    // Kullanıcının rollerini kontrol et
+                    var roles = await _signInManager.UserManager.GetRolesAsync(user);
+
+                    if (roles.Contains("Doctor"))
+                    {
+                        // Eğer rol 'Doctor' ise doktor sayfasına yönlendir
+                        return LocalRedirect(Url.Content("~/Doctors"));
+                    }
+                    else if (roles.Contains("Patient"))
+                    {
+                        // Eğer rol 'Patient' ise hasta sayfasına yönlendir
+                        return LocalRedirect(Url.Content("~/Patients"));
+                    }
+
+                    // Varsayılan olarak ana sayfaya yönlendirme
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -134,8 +151,9 @@ namespace HospitalManagementSystem.Areas.Identity.Pages.Account
                 }
             }
 
-            // If we got this far, something failed, redisplay form
+            // Eğer buraya gelirse, form doğrulama başarısızdır, formu yeniden göster
             return Page();
         }
+
     }
 }

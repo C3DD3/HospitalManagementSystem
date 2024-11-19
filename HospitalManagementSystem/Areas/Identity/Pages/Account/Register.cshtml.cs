@@ -97,6 +97,10 @@ namespace HospitalManagementSystem.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Display(Name = "I am a Doctor")]
+            public bool IsDoctor { get; set; } 
+
         }
 
 
@@ -110,6 +114,7 @@ namespace HospitalManagementSystem.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
@@ -141,7 +146,11 @@ namespace HospitalManagementSystem.Areas.Identity.Pages.Account
                     else
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        // Rolleri atama işlemi
+
+                        await _userManager.AddToRoleAsync(user, "Patient");
+                        return Redirect(Url.Content("~/Patients/Create"));
+
                     }
                 }
                 foreach (var error in result.Errors)

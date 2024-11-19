@@ -12,6 +12,31 @@ html {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+/* navbar için mor arka plan rengi */
+.custom-bg-purple {
+    background-color: #800080; /* Mor renk tonu */
+}
+
+/* Navbar yazý rengini beyaz yapmak için */
+.custom-bg-purple .navbar-nav .nav-link {
+    color: white !important; /* Yazý rengini beyaz yapar */
+}
+
+.custom-bg-purple .navbar-brand {
+    color: white !important; /* Marka yazýsýný beyaz yapar */
+}
+
+.navbar-nav {
+    display: flex;
+    align-items: center; /* Yükseklik hizalamasý için */
+}
+
+    .navbar-nav .nav-item {
+        margin-right: 10px; /* Sað tarafa boþluk eklemek için */
+    }
+
+
+
 html {
   position: relative;
   min-height: 100%;

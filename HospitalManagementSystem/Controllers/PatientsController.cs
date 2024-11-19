@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HospitalManagementSystem.Models;
 using HospitalManagementSystem.Repository;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalManagementSystem.Controllers
 {
@@ -14,12 +16,16 @@ namespace HospitalManagementSystem.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public PatientsController(ApplicationDbContext context)
+        private readonly UserManager<IdentityUser> _userManager;
+
+        public PatientsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Patients
+        [Authorize  (Roles = "Manager")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Patients.ToListAsync());
@@ -44,6 +50,7 @@ namespace HospitalManagementSystem.Controllers
         }
 
         // GET: Patients/Create
+        [Authorize(Roles = "Patient")]
         public IActionResult Create()
         {
             return View();
@@ -53,9 +60,12 @@ namespace HospitalManagementSystem.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Patient")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PatientId,NationalId,FirstName,LastName,PhoneNumber,Address,IdentityUserId,DateOfBirth")] Patient patient)
+        public async Task<IActionResult> Create([Bind("PatientId,NationalId,FirstName,LastName,PhoneNumber,Address,DateOfBirth")] Patient patient)
         {
+            var user = await _userManager.GetUserAsync(User);
+            patient.IdentityUserId = user?.Id;
             if (ModelState.IsValid)
             {
                 _context.Add(patient);

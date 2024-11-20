@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalManagementSystem.Controllers
 {
-    [Authorize (Roles = "Manager")] 
+    //[Authorize (Roles = "Manager")] 
     public class DoctorsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -29,6 +29,23 @@ namespace HospitalManagementSystem.Controllers
             var applicationDbContext = _context.Doctors.Include(d => d.Department);
             return View(await applicationDbContext.ToListAsync());
         }
+
+        // GET: Doctors filtered
+        public async Task<IActionResult> Index2()
+        {
+            var doctors = await _context.Doctors
+                .Include(d => d.Department)
+                .Select(d => new DoctorViewModel
+                {
+                    FirstName = d.FirstName,
+                    LastName = d.LastName,
+                    DepartmentName = d.Department.Name
+                })
+                .ToListAsync();
+
+            return View(doctors);
+        }
+
 
         // GET: Doctors/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -181,5 +198,11 @@ namespace HospitalManagementSystem.Controllers
         public string Email { get; set; } // Email için ek alan
         public Doctor Doctor { get; set; } // Doctor özelliklerini içeren nesne
     }
+    public class DoctorViewModel
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string DepartmentName { get; set; }
+    }
 
-}
+    }

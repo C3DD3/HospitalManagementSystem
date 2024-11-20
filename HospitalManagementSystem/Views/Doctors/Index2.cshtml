@@ -1,0 +1,27 @@
+﻿@model IEnumerable<HospitalManagementSystem.Controllers.DoctorViewModel>
+
+@{
+    ViewData["Title"] = "Our Doctors";
+}
+
+<h1 style ="margin-top: 30px;">Our Doctors</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Department</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var doctor in Model)
+        {
+            <tr>
+                <td>@doctor.FirstName</td>
+                <td>@doctor.LastName</td>
+                <td>@doctor.DepartmentName</td>
+            </tr>
+        }
+    </tbody>
+</table>

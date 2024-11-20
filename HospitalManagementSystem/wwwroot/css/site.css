@@ -1,47 +1,69 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-/* navbar için mor arka plan rengi */
 .custom-bg-purple {
-    background-color: #800080; /* Mor renk tonu */
+    background-color: #800080;
 }
 
-/* Navbar yazý rengini beyaz yapmak için */
-.custom-bg-purple .navbar-nav .nav-link {
-    color: white !important; /* Yazý rengini beyaz yapar */
+    .custom-bg-purple .navbar-nav .nav-link {
+        color: white !important;
+    }
+
+    .custom-bg-purple .navbar-brand {
+        color: white !important;
+    }
+
+.custom-bg-darkgreen .navbar-brand,
+.custom-bg-darkgreen .nav-link {
+    color: white !important;
 }
 
-.custom-bg-purple .navbar-brand {
-    color: white !important; /* Marka yazýsýný beyaz yapar */
+    .custom-bg-darkgreen .nav-link:hover {
+        color: #d3d3d3 !important;
+    }
+
+.custom-bg-darkgreen {
+    background-color: #012B32;
 }
+
+    .custom-bg-darkgreen .navbar-brand,
+    .custom-bg-darkgreen .nav-link {
+        color: white !important;
+    }
+
+        .custom-bg-darkgreen .nav-link:hover {
+            color: #d3d3d3 !important;
+        }
+
+    .custom-bg-darkgreen .navbar-brand {
+        color: white !important;
+    }
 
 .navbar-nav {
     display: flex;
-    align-items: center; /* Yükseklik hizalamasý için */
+    align-items: center;
 }
 
     .navbar-nav .nav-item {
-        margin-right: 10px; /* Sað tarafa boþluk eklemek için */
+        margin-right: 10px;
     }
 
-
-
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }

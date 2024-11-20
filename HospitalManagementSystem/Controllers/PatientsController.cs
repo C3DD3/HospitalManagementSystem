@@ -24,8 +24,8 @@ namespace HospitalManagementSystem.Controllers
             _userManager = userManager;
         }
 
-        // GET: Patients
-        [Authorize  (Roles = "Manager")]
+        //// GET: Patients
+        //[Authorize  (Roles = "Manager")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Patients.ToListAsync());

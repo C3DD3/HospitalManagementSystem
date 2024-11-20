@@ -25,6 +25,20 @@ namespace HospitalManagementSystem.Controllers
             return View(await _context.Departments.ToListAsync());
         }
 
+        public async Task<IActionResult> Index2()
+        {
+            var departments = await _context.Departments
+                .Select(d => new DepartmentViewModel
+                {
+                    Name = d.Name,
+                    Description = d.Description
+                })
+                .ToListAsync();
+
+            return View(departments);
+        }
+
+
         // GET: Departments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -152,6 +166,12 @@ namespace HospitalManagementSystem.Controllers
         private bool DepartmentExists(int id)
         {
             return _context.Departments.Any(e => e.DepartmentId == id);
+        }
+
+        public class DepartmentViewModel
+        {
+            public string Name { get; set; }
+            public string Description { get; set; }
         }
     }
 }

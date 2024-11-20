@@ -26,6 +26,26 @@ namespace HospitalManagementSystem.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        // GET: Appointments Filtered
+        public async Task<IActionResult> Index2()
+        {
+            var appointments = await _context.Appointments
+                .Include(a => a.Patient)
+                .Include(a => a.Doctor)
+                    .ThenInclude(d => d.Department)
+                .Select(a => new AppointmentViewModel
+                {
+                    AppointmentDate = a.AppointmentDate,
+                    PatientName = a.Patient.FirstName + " " + a.Patient.LastName,
+                    DoctorName = a.Doctor.FirstName + " " + a.Doctor.LastName,
+                    DepartmentName = a.Doctor.Department.Name
+                })
+                .ToListAsync();
+
+            return View(appointments);
+        }
+
+
         // GET: Appointments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -177,5 +197,16 @@ namespace HospitalManagementSystem.Controllers
         {
             return _context.Appointments.Any(e => e.AppointmentId == id);
         }
+       
+        
+        public class AppointmentViewModel
+        {
+            public DateTime AppointmentDate { get; set; }
+            public string PatientName { get; set; }
+            public string DoctorName { get; set; }
+            public string DepartmentName { get; set; }
+        }
     }
+
 }
+

@@ -7,32 +7,73 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HospitalManagementSystem.Models;
 using HospitalManagementSystem.Repository;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNet.Identity;
 
 namespace HospitalManagementSystem.Controllers
 {
     public class AppointmentsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public AppointmentsController(ApplicationDbContext context)
+        private readonly Microsoft.AspNetCore.Identity.UserManager<IdentityUser> _userManager;
+        public AppointmentsController(ApplicationDbContext context, Microsoft.AspNetCore.Identity.UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Appointments
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Appointments.Include(a => a.Doctor).Include(a => a.Patient);
-            return View(await applicationDbContext.ToListAsync());
+            var userId = _userManager.GetUserId(User); // Aktif kullanıcının IdentityUserId'sini al
+            var isManager = User.IsInRole("Manager"); // Kullanıcının "Manager" rolünde olup olmadığını kontrol et
+            var isDoctor = User.IsInRole("Doctor"); // Kullanıcının "Doctor" rolünde olup olmadığını kontrol et
+
+            List<Appointment> appointments;
+
+            if (isManager)
+            {
+                // Eğer kullanıcı Manager ise tüm randevuları getir
+                appointments = await _context.Appointments
+                    .Include(a => a.Patient)
+                    .Include(a => a.Doctor)
+                    .ToListAsync();
+            }
+            else if (isDoctor)
+            {
+                // Eğer kullanıcı Doctor ise kendi randevularını getir
+                appointments = await _context.Appointments
+                    .Include(a => a.Patient)
+                    .Include(a => a.Doctor)
+                    .Where(a => a.Doctor.IdentityUserId == userId)
+                    .ToListAsync();
+            }
+            else
+            {
+                // Eğer kullanıcı Patient ise kendi randevularını getir
+                appointments = await _context.Appointments
+                    .Include(a => a.Patient)
+                    .Include(a => a.Doctor)
+                    .Where(a => a.Patient.IdentityUserId == userId)
+                    .ToListAsync();
+            }
+
+            return View(appointments);
         }
+
+
 
         // GET: Appointments Filtered
         public async Task<IActionResult> Index2()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Giriş yapan kullanıcının ID'sini alır
+
             var appointments = await _context.Appointments
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
                     .ThenInclude(d => d.Department)
+                .Where(a => a.Patient.IdentityUserId == userId) // Sadece giriş yapan kullanıcının randevuları
                 .Select(a => new AppointmentViewModel
                 {
                     AppointmentDate = a.AppointmentDate,
@@ -44,6 +85,7 @@ namespace HospitalManagementSystem.Controllers
 
             return View(appointments);
         }
+
 
 
         // GET: Appointments/Details/5
@@ -197,8 +239,8 @@ namespace HospitalManagementSystem.Controllers
         {
             return _context.Appointments.Any(e => e.AppointmentId == id);
         }
-       
-        
+
+
         public class AppointmentViewModel
         {
             public DateTime AppointmentDate { get; set; }

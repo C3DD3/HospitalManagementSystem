@@ -124,12 +124,12 @@ namespace HospitalManagementSystem.Areas.Identity.Pages.Account
                     if (roles.Contains("Doctor"))
                     {
                         // Eğer rol 'Doctor' ise doktor sayfasına yönlendir
-                        return LocalRedirect(Url.Content("~/Doctors"));
+                        return LocalRedirect(Url.Content("~/Doctors/PersonalizedIndex"));
                     }
                     else if (roles.Contains("Patient"))
                     {
                         // Eğer rol 'Patient' ise hasta sayfasına yönlendir
-                        return LocalRedirect(Url.Content("~/Patients"));
+                        return LocalRedirect(Url.Content("~/Patients/PersonalizedIndex"));
                     }
 
                     // Varsayılan olarak ana sayfaya yönlendirme

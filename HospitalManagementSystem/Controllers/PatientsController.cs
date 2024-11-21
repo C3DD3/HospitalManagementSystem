@@ -30,6 +30,11 @@ namespace HospitalManagementSystem.Controllers
         {
             return View(await _context.Patients.ToListAsync());
         }
+        public IActionResult PersonalizedIndex()
+        {
+         // Bu metod içinde gereken işlemleri yapın.
+            return View();
+        }
 
         // GET: Patients/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -50,7 +55,7 @@ namespace HospitalManagementSystem.Controllers
         }
 
         // GET: Patients/Create
-        [Authorize(Roles = "Patient")]
+
         public IActionResult Create()
         {
             return View();
@@ -60,7 +65,7 @@ namespace HospitalManagementSystem.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Roles = "Patient")]
+
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PatientId,NationalId,FirstName,LastName,PhoneNumber,Address,DateOfBirth")] Patient patient)
         {
@@ -70,7 +75,7 @@ namespace HospitalManagementSystem.Controllers
             {
                 _context.Add(patient);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(PersonalizedIndex));
             }
             return View(patient);
         }

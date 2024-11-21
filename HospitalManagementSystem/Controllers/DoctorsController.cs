@@ -46,9 +46,14 @@ namespace HospitalManagementSystem.Controllers
             return View(doctors);
         }
 
+        public IActionResult PersonalizedIndex()
+        { // Bu metod içinde gereken işlemleri yapın.
+          return View();
+        }
 
-        // GET: Doctors/Details/5
-        public async Task<IActionResult> Details(int? id)
+
+            // GET: Doctors/Details/5
+            public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {

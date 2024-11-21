@@ -1,6 +1,7 @@
 ﻿using HospitalManagementSystem.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using System.Security.Claims;
 
 namespace HospitalManagementSystem.Services
 {
@@ -13,8 +14,10 @@ namespace HospitalManagementSystem.Services
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(UserManager<IdentityUser> userManager, IUserStore<IdentityUser> userStore, IEmailSender emailSender, ApplicationDbContext context, IConfiguration configuration, RoleManager<IdentityRole> roleManager)
+
+        public UserService(UserManager<IdentityUser> userManager, IUserStore<IdentityUser> userStore, IEmailSender emailSender, ApplicationDbContext context, IConfiguration configuration, RoleManager<IdentityRole> roleManager, IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -23,6 +26,7 @@ namespace HospitalManagementSystem.Services
             _context = context;
             _configuration = configuration;
             _roleManager = roleManager;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<UserCreateResponse> CreateIdentityUser(string email, string password = "")
         {
@@ -185,6 +189,10 @@ namespace HospitalManagementSystem.Services
                 throw new NotSupportedException("Default password couldn't be found in configuration.");
             }
             return password;
+        }
+        public string GetUserId()
+        {
+            return _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
         }
     }
 

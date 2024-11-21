@@ -6,6 +6,7 @@ namespace HospitalManagementSystem.Services
     {
         Task<UserCreateResponse> CreateIdentityUser(string email, string password = "");
         Task<IdentityResult> DeleteIdentityUser(string userId);
+        string? GetUserId();
         Task<IdentityResult> LinkDoctorAndIdentityUser(int doctorId, string email);
         Task SendEmailAsync(string email, string subject, string htmlMessage);
     }

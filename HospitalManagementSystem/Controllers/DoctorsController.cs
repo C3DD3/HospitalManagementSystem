@@ -9,6 +9,7 @@ using HospitalManagementSystem.Models;
 using HospitalManagementSystem.Repository;
 using HospitalManagementSystem.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace HospitalManagementSystem.Controllers
 {
@@ -17,10 +18,13 @@ namespace HospitalManagementSystem.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IUserService _userService;
-        public DoctorsController(ApplicationDbContext context, IUserService userService)
+        private readonly UserManager<IdentityUser> _userManager;
+
+        public DoctorsController(ApplicationDbContext context, IUserService userService, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _userService = userService;
+            _userManager = userManager;
         }
 
         // GET: Doctors
@@ -46,14 +50,35 @@ namespace HospitalManagementSystem.Controllers
             return View(doctors);
         }
 
-        public IActionResult PersonalizedIndex()
-        { // Bu metod içinde gereken işlemleri yapın.
-          return View();
+        public async Task<IActionResult> PersonalizedIndex()
+        {
+            // Giriş yapan kullanıcının IdentityUser Id'sini alın
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Kullanıcı ID'sine göre Doctors tablosundan doktoru alın
+            var doctor = await _context.Doctors
+                .FirstOrDefaultAsync(d => d.IdentityUserId == user.Id);
+
+            if (doctor == null)
+            {
+                // Kullanıcıyla eşleşen bir doktor bulunamazsa
+                return RedirectToAction("Create");
+            }
+
+            // ViewData ile doktor adını view'a gönderin
+            ViewData["DoctorName"] = $"{doctor.FirstName} {doctor.LastName}";
+
+            return View();
         }
 
 
-            // GET: Doctors/Details/5
-            public async Task<IActionResult> Details(int? id)
+
+        // GET: Doctors/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {

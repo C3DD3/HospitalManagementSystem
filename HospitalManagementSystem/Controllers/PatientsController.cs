@@ -30,11 +30,31 @@ namespace HospitalManagementSystem.Controllers
         {
             return View(await _context.Patients.ToListAsync());
         }
-        public IActionResult PersonalizedIndex()
+        public async Task<IActionResult> PersonalizedIndex()
         {
-         // Bu metod içinde gereken işlemleri yapın.
+            // Giriş yapan kullanıcının IdentityUser Id'sini alın
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Kullanıcı ID'sine göre Patients tablosundan hastayı alın
+            var patient = await _context.Patients
+                .FirstOrDefaultAsync(p => p.IdentityUserId == user.Id);
+
+            if (patient == null)
+            {
+                // Kullanıcıyla eşleşen bir hasta bulunamazsa
+                return RedirectToAction("Create");
+            }
+
+            // ViewData ile hasta adını view'a gönderin
+            ViewData["PatientName"] = $"{patient.FirstName} {patient.LastName}";
+
             return View();
         }
+
 
         // GET: Patients/Details/5
         public async Task<IActionResult> Details(int? id)

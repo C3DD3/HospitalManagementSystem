@@ -67,3 +67,6 @@ html {
 body {
     margin-bottom: 60px;
 }
+.extra-margin {
+    margin-bottom: 100px;
+}

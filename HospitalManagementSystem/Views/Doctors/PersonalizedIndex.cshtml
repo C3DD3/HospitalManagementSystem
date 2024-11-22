@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Doktor Adı";
+    ViewData["Title"] = "Doktor Paneli";
 }
 
 <!DOCTYPE html>
@@ -13,11 +13,16 @@
 </head>
 <body>
     <div class="container mt-5">
-        <header class="text-center mb-4">
-            <h1>Doktor Adı</h1>
+        <header class="text-center extra-margin" ">
+            <h1>Merhaba, DR.  @ViewData["DoctorName"]</h1>
         </header>
-        <div class="text-center">
-            <a class="btn btn-secondary mx-2" href="/Appointments/Index">Randevu Görüntüle</a>
+        <div class="row">
+            <div class="col-md-3">
+                <!-- Butonları sol tarafa hizala -->
+                <div class="d-flex flex-column">
+                    <a class="btn btn-secondary mb-2" href="/Appointments/Index">Randevu Görüntüle</a>
+                </div>
+            </div>
         </div>
     </div>
 

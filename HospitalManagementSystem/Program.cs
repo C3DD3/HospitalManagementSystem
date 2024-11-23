@@ -1,3 +1,4 @@
+using HospitalManagementSystem;
 using HospitalManagementSystem.Repository;
 using HospitalManagementSystem.Services;
 using Microsoft.AspNetCore.Identity;
@@ -9,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<IUserService, UserService>();
-
+//builder.Services.AddScoped<RedirectMiddleware>();
 
 var connectionString = builder.Configuration.GetConnectionString("localdb")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");

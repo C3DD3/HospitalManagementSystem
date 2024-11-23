@@ -4,10 +4,28 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
+    var user = await UserManager.GetUserAsync(User);
+    if (user != null)
+    {
+        var roles = await UserManager.GetRolesAsync(user);
+
+        if (roles.Contains("Patient"))
+        {
+            <li style="margin-left: 60px" class="nav-item">
+                <a class="nav-link"  href="/Patients/PersonalizedIndex">Actions</a>
+            </li>
+        }
+        else if (roles.Contains("Doctor"))
+        {
+            <li style="margin-left: 60px" class="nav-item">
+                <a class="nav-link" href="/Doctors/PersonalizedIndex">Actions</a>
+            </li>
+        }
+    }
     <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li>
-                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Account</a>
             </li>
             <li>
                 <button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>

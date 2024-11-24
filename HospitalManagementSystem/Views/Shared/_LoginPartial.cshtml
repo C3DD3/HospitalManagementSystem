@@ -21,6 +21,12 @@
                 <a class="nav-link" href="/Doctors/PersonalizedIndex">Actions</a>
             </li>
         }
+        else
+        {
+            <li style="margin-left: 60px" class="nav-item">
+                <a class="nav-link" href="/Managers/Index">Actions</a>
+            </li>
+        }
     }
     <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
@@ -36,7 +42,7 @@
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li style = "margin-right: 10px;" ><a asp-area="Identity" asp-page="/Account/Register">Register</a></li>
+        <li style="margin-right: 10px; margin-left: 60px"><a asp-area="Identity" asp-page="/Account/Register">Register</a></li>
         <li><a asp-area="Identity" asp-page="/Account/Login">Login</a></li>
     </ul>
 }

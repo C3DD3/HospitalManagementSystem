@@ -5,9 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Patient Registration</h1>
-
-<h4>Patient</h4>
+<h1 style="margin-top:30px;">Patient Registration</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -47,7 +45,7 @@
                 <br />
                 <input type="submit" value="Create" class="btn btn-primary" />
                 <span style="display: inline-block; width: 50px;"></span>
-                <a asp-action="Index">Back to List</a>
+                <a class="btn btn-warning" href="/Patients/Index">Patients List</a>
             </div>
         </form>
     </div>

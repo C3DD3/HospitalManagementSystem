@@ -21,7 +21,9 @@
                 <!-- Butonları sol tarafa hizala -->
                 <div class="d-flex flex-column">
                     <a class="btn btn-secondary mb-2" href="/Appointments/Index">Randevu Görüntüle</a>
-                    <a class="btn btn-danger mb-2" href="/">Çıkış Yap</a>
+                    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/" method="post" style="margin-top: 40px;">
+                        <button type="submit" class="btn btn-danger mb-1">Logout</button>
+                    </form>
                 </div>
             </div>
         </div>

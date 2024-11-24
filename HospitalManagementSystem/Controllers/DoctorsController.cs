@@ -158,7 +158,10 @@ namespace HospitalManagementSystem.Controllers
             {
                 return NotFound();
             }
-
+            // Retrieve the existing entity without tracking
+            var existingDoctor = await _context.Doctors.AsNoTracking().FirstOrDefaultAsync(x => x.DoctorId == doctor.DoctorId);
+            if (existingDoctor == null) { return NotFound(); } 
+            doctor.IdentityUserId = existingDoctor.IdentityUserId;
             if (ModelState.IsValid)
             {
                 try

@@ -131,6 +131,10 @@ namespace HospitalManagementSystem.Areas.Identity.Pages.Account
                         // Eğer rol 'Patient' ise hasta sayfasına yönlendir
                         return LocalRedirect(Url.Content("~/Patients/PersonalizedIndex"));
                     }
+                    else
+                    {
+                        return LocalRedirect(Url.Content("~/Managers/Index"));
+                    }
 
                     // Varsayılan olarak ana sayfaya yönlendirme
                     return LocalRedirect(returnUrl);

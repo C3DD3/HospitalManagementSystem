@@ -6,11 +6,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>My Appointments</h1>
+<h1 style="margin-top: 40px; margin-bottom: 50px">My Appointments</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New Appointment</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -57,3 +54,20 @@
         }
     </tbody>
 </table>
+
+<p style="margin-top: 60px;">
+    @if (User.IsInRole("Patient"))
+    {
+        <a asp-action="Create" class="btn btn-primary">Create New Appointment</a>
+        <a class="btn btn-danger" href="/Patients/PersonalizedIndex">Go Back</a>
+    }
+    else if (User.IsInRole("Doctor"))
+    {
+        <a class="btn btn-danger" href="/Doctors/PersonalizedIndex">Go Back</a>
+    }
+    else
+    {
+        <a class="btn btn-danger" href="/Managers/Index">Go Back</a>
+    }
+</p>
+

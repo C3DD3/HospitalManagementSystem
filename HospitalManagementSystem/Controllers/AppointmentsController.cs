@@ -98,8 +98,10 @@ namespace HospitalManagementSystem.Controllers
 
             var appointment = await _context.Appointments
                 .Include(a => a.Doctor)
+                    .ThenInclude(d => d.Department) // Department bilgilerini eklemek için
                 .Include(a => a.Patient)
                 .FirstOrDefaultAsync(m => m.AppointmentId == id);
+
             if (appointment == null)
             {
                 return NotFound();
@@ -108,42 +110,63 @@ namespace HospitalManagementSystem.Controllers
             return View(appointment);
         }
 
-        // GET: Appointments/Create
+
+        [HttpPost]
+        public JsonResult GetDoctorsByDepartment(int departmentId)
+        {
+            var doctors = _context.Doctors
+                .Where(d => d.DepartmentId == departmentId)
+                .Select(d => new { id = d.DoctorId, name = d.FirstName + " " + d.LastName })
+                .ToList();
+
+            return Json(doctors);
+        }
+
+        [HttpGet]
         public IActionResult Create()
         {
+            var viewModel = new AppointmentCreateViewModel();
+            ViewData["Departments"] = new SelectList(_context.Departments, "DepartmentId", "Name");
+            ViewData["Doctors"] = new SelectList(Enumerable.Empty<SelectListItem>()); // Başlangıçta boş
+            ViewData["Patients"] = new SelectList(_context.Patients, "PatientId", "Name");
 
-            ViewData["Doctors"] = _context.Doctors.Select(p => new SelectListItem
-            {
-                Value = p.DoctorId.ToString(),
-                Text = p.FirstName + " " + p.LastName,
-            }).ToList();
-
-            ViewData["Patients"] = _context.Patients.Select(p => new SelectListItem
-            {
-                Value = p.PatientId.ToString(),
-                Text = p.FirstName + " " + p.LastName,
-            }).ToList();
-
-            return View();
+            return View(viewModel);
         }
 
-        // POST: Appointments/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AppointmentId,PatientId,DoctorId,AppointmentDate")] Appointment appointment)
+        public async Task<IActionResult> Create(AppointmentCreateViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(appointment);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                // Hata varsa ViewModel’i tekrar doldur
+                ViewData["Departments"] = new SelectList(_context.Departments, "DepartmentId", "Name", model.DepartmentId);
+                ViewData["Doctors"] = new SelectList(_context.Doctors, "DoctorId", "Name", model.DoctorId);
+                ViewData["Patients"] = new SelectList(_context.Patients, "PatientId", "Name", model.PatientId);
+
+                return View(model);
             }
-            ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "DoctorId", appointment.DoctorId);
-            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "PatientId", appointment.PatientId);
-            return View(appointment);
+            if (model.AppointmentDate <= DateTime.Now)
+            {
+                TempData["ErrorMessage"] = "The appointment date cannot be in the past.";
+                return RedirectToAction(nameof(Create));
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            // Yeni bir Appointment nesnesi oluştur ve doldur
+            var appointment = new Appointment
+            {
+                PatientId = _context.Patients.FirstOrDefault(x=> x.IdentityUserId == user.Id)?.PatientId ?? throw new Exception("Patient not found"),
+                DoctorId = model.DoctorId,
+                AppointmentDate = model.AppointmentDate
+            };
+
+            _context.Appointments.Add(appointment);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
+
 
         // GET: Appointments/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -247,6 +270,15 @@ namespace HospitalManagementSystem.Controllers
             public string PatientName { get; set; }
             public string DoctorName { get; set; }
             public string DepartmentName { get; set; }
+        }
+
+        public class AppointmentCreateViewModel
+        {
+            public int DepartmentId { get; set; }
+            public int DoctorId { get; set; }
+            public int PatientId { get; set; }
+
+            public DateTime AppointmentDate { get; set; }
         }
     }
 

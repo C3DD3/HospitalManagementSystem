@@ -5,11 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+<h1 style="margin-bottom: 30px; margin-top:30px;">Appointment Details</h1>
 
 <div>
-    <h4>Appointment</h4>
-    <hr />
+    <hr / style="margin-bottom: 40px;">
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.AppointmentDate)
@@ -21,17 +20,29 @@
             @Html.DisplayNameFor(model => model.Patient)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Patient.PatientId)
+        @{ 
+            var fullNameP = $"{Model.Patient.FirstName} {Model.Patient.LastName}";
+         }
+            @Html.DisplayFor(model => fullNameP)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Doctor)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Doctor.DoctorId)
+        @{ 
+            var fullNameD = $"{Model.Doctor.FirstName} {Model.Doctor.LastName}";
+         }
+            @Html.DisplayFor(model => fullNameD)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Doctor.Department)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Doctor.Department.Name)
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.AppointmentId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div style="margin-top:60px;">
+    <a class="btn btn-warning" href="/Appointments/Edit/@Model?.AppointmentId">Edit</a> |
+    <a class="btn btn-danger" href="/Appointments">Go Back</a>
 </div>

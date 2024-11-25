@@ -9,7 +9,7 @@
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
         public string? IdentityUserId { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }   //DateOnly kullansak sadece yıl ay gün seçebilirdik.
 
         public virtual ICollection<Appointment>? Appointments { get; set; }
 

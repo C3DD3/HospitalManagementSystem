@@ -91,6 +91,7 @@ namespace HospitalManagementSystem.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             patient.IdentityUserId = user?.Id;
+
             if (ModelState.IsValid)
             {
                 _context.Add(patient);

@@ -1,39 +1,92 @@
-﻿@model HospitalManagementSystem.Models.Appointment
+﻿@model HospitalManagementSystem.Controllers.AppointmentsController.AppointmentCreateViewModel
 
-@{
-    ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+<h1 style="margin-top: 20px">Make an Appointment</h1>
+<hr style="margin-bottom: 40px;" />
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div id="error-alert" class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
 }
-
-<h1 style="margin-top: 20px">Make a Appointment</h1>
-<hr / style="margin-bottom: 40px;">
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Department Selection -->
             <div class="form-group">
-                <label class="control-label">Patient Name</label>
-                <select asp-for="PatientId" class="form-control" asp-items="ViewBag.Patients"></select>
+                <label class="control-label">Department</label>
+                <select asp-for="DepartmentId" id="DepartmentId" class="nice-select form-control" asp-items="ViewBag.Departments" onchange="loadDoctors(this)">
+                    <option value="">Select Department</option>
+                </select>
             </div>
+
+            <!-- Doctor Selection -->
             <div class="form-group">
                 <label class="control-label">Doctor Name</label>
-                <select asp-for="DoctorId" class ="form-control" asp-items="ViewBag.Doctors"></select>
+                <select asp-for="DoctorId" id="DoctorId" class="nice-select form-control" asp-items="ViewBag.Doctors">
+                    <option value="">Select Doctor</option>
+                </select>
             </div>
+
+            <!-- Appointment Date -->
+
             <div class="form-group">
-                <label class="control-label">Appointment Date</label>
+                <label asp-for="AppointmentDate" class="control-label"></label>
                 <input asp-for="AppointmentDate" class="form-control" />
                 <span asp-validation-for="AppointmentDate" class="text-danger"></span>
             </div>
-            <div class="form-group"; style="margin-top: 60px;">
+
+            <div class="form-group" style="margin-top: 60px;">
                 <input type="submit" value="Create" class="btn btn-primary" />
-                <a class="btn btn-warning" style="margin-left:20px; margin-right:20px;" href="/Appointments/Index">My Appointments</a>
+                <a class="btn btn-warning" style="margin-left: 20px; margin-right: 20px;" href="/Appointments/Index">My Appointments</a>
                 <a class="btn btn-danger" href="/Patients/PersonalizedIndex">Go Back</a>
             </div>
         </form>
     </div>
 </div>
 
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nice-select/1.1.0/css/nice-select.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+            // 5 saniye sonra mesajları gizle
+            setTimeout(function () {
+                var errorAlert = document.getElementById('error-alert');
+                var successAlert = document.getElementById('success-alert');
+                if (errorAlert) {
+                    errorAlert.style.display = 'none';
+                }
+                if (successAlert) {
+                    successAlert.style.display = 'none';
+                }
+            }, 5000); // 5000ms = 5 saniye
+        });
+        </script>
 }
+<script>
+    $(document).ready(function () {
+        $('select').niceSelect(); // Initialize nice-select
+    });
+
+    function loadDoctors(departmentSelect) {
+        var departmentId = departmentSelect.value;
+        var url = '@Url.Action("GetDoctorsByDepartment", "Appointments")';
+
+        $.post(url, { departmentId: departmentId }, function (data) {
+            populateDropdown("#DoctorId", data, "Select Doctor");
+        });
+    }
+
+    function populateDropdown(dropdownId, items, placeholder) {
+        $(dropdownId).empty();
+        $(dropdownId).append('<option value="">' + placeholder + '</option>');
+        $.each(items, function (index, item) {
+            $(dropdownId).append('<option value="' + item.id + '">' + item.name + '</option>');
+        });
+        $(dropdownId).niceSelect('update'); // Update nice-select
+    }
+</script>

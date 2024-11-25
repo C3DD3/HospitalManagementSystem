@@ -145,10 +145,10 @@ namespace HospitalManagementSystem.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        // Rolleri atama işlemi
-
                         await _userManager.AddToRoleAsync(user, "Patient");
+
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+
                         return Redirect(Url.Content("~/Patients/Create"));
 
                     }

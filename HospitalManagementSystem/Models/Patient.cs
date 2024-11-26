@@ -11,6 +11,7 @@
         public string? IdentityUserId { get; set; }
         public DateTime DateOfBirth { get; set; }   //DateOnly kullansak sadece yıl ay gün seçebilirdik.
 
+
         public virtual ICollection<Appointment>? Appointments { get; set; }
 
 

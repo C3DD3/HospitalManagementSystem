@@ -15,10 +15,10 @@
                 @Html.DisplayNameFor(model => model.AppointmentDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patient.PatientId)
+                @Html.DisplayNameFor(model => model.Patient)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Doctor.DoctorId)
+                @Html.DisplayNameFor(model => model.Doctor)
             </th>
             <th>Actions</th>
         </tr>
@@ -68,6 +68,7 @@
     else
     {
         <a class="btn btn-danger" href="/Managers/Index">Go Back</a>
+        <a class="btn btn-warning" href="/Appointments/SearchByNationalId">Filtered Search</a>
     }
 </p>
 

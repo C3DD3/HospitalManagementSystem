@@ -1,0 +1,56 @@
+﻿@model IEnumerable<HospitalManagementSystem.Models.Appointment>
+
+<h2>Search Appointments by National ID</h2>
+
+<div class="form-group">
+    <form asp-action="SearchByNationalId" method="get">
+        <label for="nationalId">Enter National ID:</label>
+        <input type="text" name="nationalId" id="nationalId" class="form-control" placeholder="National ID" />
+        <button type="submit" class="btn btn-primary mt-2">Search</button>
+    </form>
+</div>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Appointment ID</th>
+                <th>Patient Name</th>
+                <th>Doctor Name</th>
+                <th>Department</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var appointment in Model)
+            {
+                <tr>
+                    <td>@appointment.AppointmentId</td>
+                    <td>@appointment.Patient?.FirstName </td> <!-- Eğer Patient null ise -->
+                    <td>@appointment.Doctor?.FirstName </td> <!-- Eğer Doctor null ise -->
+                    <td>@appointment.Doctor?.Department?.Name </td> <!-- Eğer Department null ise -->
+                    <td>@appointment.AppointmentDate.ToString("g")</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No appointments to display.</p>
+}
+
+<div style="margin-top: 40px;">
+    <a class="btn btn-danger" href="/Managers/Index">Go Back</a>
+    <a class="btn btn-warning" href="/Appointments/Index">Appointments</a>
+</div>
+

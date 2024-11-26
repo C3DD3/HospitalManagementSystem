@@ -139,7 +139,6 @@ namespace HospitalManagementSystem.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // Hata varsa ViewModel’i tekrar doldur
                 ViewData["Departments"] = new SelectList(_context.Departments, "DepartmentId", "Name", model.DepartmentId);
                 ViewData["Doctors"] = new SelectList(_context.Doctors, "DoctorId", "Name", model.DoctorId);
                 ViewData["Patients"] = new SelectList(_context.Patients, "PatientId", "Name", model.PatientId);
@@ -153,7 +152,6 @@ namespace HospitalManagementSystem.Controllers
             }
 
             var user = await _userManager.GetUserAsync(User);
-            // Yeni bir Appointment nesnesi oluştur ve doldur
             var appointment = new Appointment
             {
                 PatientId = _context.Patients.FirstOrDefault(x=> x.IdentityUserId == user.Id)?.PatientId ?? throw new Exception("Patient not found"),
@@ -257,6 +255,30 @@ namespace HospitalManagementSystem.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        //TC kimliğe göre sorgulama yapıyorum
+        public async Task<IActionResult> SearchByNationalId(string nationalId)
+        {
+            if (string.IsNullOrEmpty(nationalId))
+            {
+                TempData["ErrorMessage"] = "Please enter a valid National ID.";
+                return View(new List<Appointment>()); // Boş liste döndür
+            }
+
+            var appointments = await _context.Appointments
+                .Include(a => a.Patient)
+                .Include(a => a.Doctor)
+                .Where(a => a.Patient.NationalId == nationalId)
+                .ToListAsync();
+
+            if (appointments.Count == 0)
+            {
+                TempData["ErrorMessage"] = "No appointments found for the provided National ID.";
+            }
+
+            return View(appointments);
+        }
+
 
         private bool AppointmentExists(int id)
         {

@@ -14,14 +14,14 @@
 <body>
     <div class="container mt-5">
         <header class="text-center extra-margin"">
-            <h1>Merhaba, Sn. @ViewData["PatientName"]</h1>
+            <h1>Hello, Dear @ViewData["PatientName"]</h1>
         </header>
         <div class="row">
             <div class="col-md-3">
                 <!-- Butonları sol tarafa hizala -->
                 <div class="d-flex flex-column">
-                    <a class="btn btn-primary mb-2" href="/Appointments/Create">Randevu Oluştur</a>
-                    <a class="btn btn-secondary mb-2" href="/Appointments/Index">Randevu Görüntüle</a>
+                    <a class="btn btn-primary mb-2" href="/Appointments/Create">Make an Appointment</a>
+                    <a class="btn btn-secondary mb-2" href="/Appointments/Index">View Appointments</a>
 
                     <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/" method="post" style="margin-top: 40px;">
                         <button type="submit" class="btn btn-danger mb-1">Logout</button>

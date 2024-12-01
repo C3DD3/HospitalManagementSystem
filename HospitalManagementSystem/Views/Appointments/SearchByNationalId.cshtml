@@ -36,7 +36,7 @@
                     <td>@appointment.AppointmentId</td>
                     <td>@appointment.Patient?.FirstName </td> <!-- Eğer Patient null ise -->
                     <td>@appointment.Doctor?.FirstName </td> <!-- Eğer Doctor null ise -->
-                    <td>@appointment.Doctor?.Department?.Name </td> <!-- Eğer Department null ise -->
+                    <td>@appointment.Doctor?.DepartmentId </td> <!-- Eğer Department null ise -->
                     <td>@appointment.AppointmentDate.ToString("g")</td>
                 </tr>
             }

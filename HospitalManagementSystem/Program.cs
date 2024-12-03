@@ -31,7 +31,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>()
 var app = builder.Build();
 
 
-// Seed roles
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -73,7 +73,6 @@ app.MapControllers();
 app.Run();
 
 
-// SeedRoles metodu
 static async Task SeedRoles(RoleManager<IdentityRole> roleManager)
 {
     if (!await roleManager.RoleExistsAsync("Patient"))

@@ -53,7 +53,6 @@ namespace HospitalManagementSystem.Repository
                 .HasForeignKey(a => a.PatientId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
         }
 
     }
